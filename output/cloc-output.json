@@ -1,0 +1,78 @@
+{"header" : {
+  "cloc_url"           : "github.com/AlDanial/cloc",
+  "cloc_version"       : "1.98",
+  "elapsed_seconds"    : 0.129563808441162,
+  "n_files"            : 178,
+  "n_lines"            : 20544,
+  "files_per_second"   : 1373.84044311135,
+  "lines_per_second"   : 158562.798108312},
+"CSV" :{
+  "nFiles": 1,
+  "blank": 0,
+  "comment": 0,
+  "code": 10001},
+"Java" :{
+  "nFiles": 107,
+  "blank": 783,
+  "comment": 3,
+  "code": 3512},
+"JavaScript" :{
+  "nFiles": 23,
+  "blank": 545,
+  "comment": 509,
+  "code": 2683},
+"DOS Batch" :{
+  "nFiles": 4,
+  "blank": 116,
+  "comment": 34,
+  "code": 486},
+"Maven" :{
+  "nFiles": 4,
+  "blank": 8,
+  "comment": 0,
+  "code": 448},
+"Bourne Shell" :{
+  "nFiles": 3,
+  "blank": 81,
+  "comment": 274,
+  "code": 390},
+"YAML" :{
+  "nFiles": 4,
+  "blank": 24,
+  "comment": 10,
+  "code": 132},
+"XML" :{
+  "nFiles": 11,
+  "blank": 4,
+  "comment": 0,
+  "code": 130},
+"Gradle" :{
+  "nFiles": 4,
+  "blank": 13,
+  "comment": 2,
+  "code": 68},
+"Properties" :{
+  "nFiles": 8,
+  "blank": 10,
+  "comment": 46,
+  "code": 68},
+"Text" :{
+  "nFiles": 6,
+  "blank": 7,
+  "comment": 0,
+  "code": 68},
+"C" :{
+  "nFiles": 2,
+  "blank": 16,
+  "comment": 0,
+  "code": 51},
+"GLSL" :{
+  "nFiles": 1,
+  "blank": 6,
+  "comment": 0,
+  "code": 16},
+"SUM": {
+  "blank": 1613,
+  "comment": 878,
+  "code": 18053,
+  "nFiles": 178} }
