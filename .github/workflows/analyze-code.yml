@@ -63,6 +63,7 @@ jobs:
           JS_LINES=$(jq '.JavaScript.code // 0' output/cloc-output.json)
           TS_LINES=$(jq '.TypeScript.code // 0' output/cloc-output.json)
           ANGULAR_LINES=$(jq '.Angular.code // 0' output/cloc-output.json)
+          PYTHON_LINES=$(jq '.Python.code // 0' output/cloc-output.json)
 
           # Calculate Others
           OTHERS=$(jq '[to_entries | map(select(.key != "SUM"
@@ -70,6 +71,7 @@ jobs:
               and .key != "JavaScript"
               and .key != "TypeScript"
               and .key != "Angular"
+              and .key != "Python"
               and (.value.code // 0) > 0)) | .[].value.code] | add // 0' output/cloc-output.json)
 
           # Format numbers with commas
@@ -82,6 +84,7 @@ jobs:
           F_JS=$(format_number $JS_LINES)
           F_TS=$(format_number $TS_LINES)
           F_ANGULAR=$(format_number $ANGULAR_LINES)
+          F_PYTHON=$(format_number $PYTHON_LINES)
           F_OTHERS=$(format_number $OTHERS)
           F_TOTAL=$(format_number $(jq '.SUM.code // 0' output/cloc-output.json))
 
@@ -93,6 +96,7 @@ jobs:
           JavaScript   --> $F_JS lines
           TypeScript   --> $F_TS lines
           Angular      --> $F_ANGULAR lines
+          Python       --> $F_PYTHON lines
           Others       --> $F_OTHERS lines
 
           [ TOTAL LINES OF CODE: $F_TOTAL ]
