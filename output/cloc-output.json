@@ -1,11 +1,11 @@
 {"header" : {
   "cloc_url"           : "github.com/AlDanial/cloc",
   "cloc_version"       : "1.98",
-  "elapsed_seconds"    : 0.135164022445679,
-  "n_files"            : 178,
-  "n_lines"            : 20534,
-  "files_per_second"   : 1316.91848747352,
-  "lines_per_second"   : 151919.124841468},
+  "elapsed_seconds"    : 0.149632215499878,
+  "n_files"            : 172,
+  "n_lines"            : 23015,
+  "files_per_second"   : 1149.48508531667,
+  "lines_per_second"   : 153810.460689321},
 "CSV" :{
   "nFiles": 1,
   "blank": 0,
@@ -21,6 +21,11 @@
   "blank": 545,
   "comment": 509,
   "code": 2683},
+"Python" :{
+  "nFiles": 9,
+  "blank": 364,
+  "comment": 328,
+  "code": 2079},
 "DOS Batch" :{
   "nFiles": 4,
   "blank": 116,
@@ -36,16 +41,6 @@
   "blank": 81,
   "comment": 274,
   "code": 390},
-"XML" :{
-  "nFiles": 11,
-  "blank": 4,
-  "comment": 0,
-  "code": 130},
-"YAML" :{
-  "nFiles": 4,
-  "blank": 24,
-  "comment": 9,
-  "code": 123},
 "Gradle" :{
   "nFiles": 4,
   "blank": 13,
@@ -72,7 +67,7 @@
   "comment": 0,
   "code": 16},
 "SUM": {
-  "blank": 1613,
-  "comment": 877,
-  "code": 18044,
-  "nFiles": 178} }
+  "blank": 1949,
+  "comment": 1196,
+  "code": 19870,
+  "nFiles": 172} }
