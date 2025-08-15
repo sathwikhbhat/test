@@ -1,35 +1,59 @@
 name: Update Lines of Code in Readme
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch: # Allows manual trigger
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
   count-lines:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check if there were commits today
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          USERNAME="sathwikhbhat"
+          SINCE=$(date -u -d "yesterday 00:00:00" +"%Y-%m-%dT%H:%M:%SZ")
+          UNTIL=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          REPOS=$(curl -s -H "Authorization: token $GH_PAT" \
+            "https://api.github.com/users/$USERNAME/repos?per_page=100" \
+            | jq -r '.[].full_name')
+
+          COMMITS_FOUND=false
+          for REPO in $REPOS; do
+            COMMITS=$(curl -s -H "Authorization: token $GH_PAT" \
+              "https://api.github.com/repos/$REPO/commits?since=$SINCE&until=$UNTIL" \
+              | jq length)
+            if [ "$COMMITS" -gt 0 ]; then
+              COMMITS_FOUND=true
+              break
+            fi
+          done
+
+          if [ "$COMMITS_FOUND" = false ]; then
+            echo "No commits today. Exiting."
+            exit 0
+          fi
+
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Install dependencies
       - name: Install Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y jq cloc locales
           sudo locale-gen en_US.UTF-8
 
-      # Fetch and clone repositories
       - name: Fetch and Clone Repositories
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           USERNAME="sathwikhbhat"
-
           REPOS=$(curl -H "Authorization: token $GH_PAT" -s "https://api.github.com/user/repos?per_page=100" \
-            | jq -r '.[] | select(.fork == false) | .full_name') || echo "Error fetching repositories"
+            | jq -r '.[] | select(.fork == false) | .full_name')
 
           mkdir -p public-repos
           cd public-repos
@@ -43,14 +67,12 @@ jobs:
               || echo "Failed to clone $REPO"
           done
 
-          # Run cloc excluding noisy langs
           echo "Calculating lines of code..."
           mkdir -p ../output
           cloc . \
             --exclude-lang=HTML,CSS,JSON,Markdown,XML,SVG,SCSS,YAML,TOML,CSV \
             --json > ../output/cloc-output.json
 
-      # Commit and push updated stats
       - name: Commit and Push Output
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
@@ -58,23 +80,16 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Extract main languages
           JAVA_LINES=$(jq '.Java.code // 0' output/cloc-output.json)
           JS_LINES=$(jq '.JavaScript.code // 0' output/cloc-output.json)
-          TS_LINES=$(jq '.TypeScript.code // 0' output/cloc-output.json)
-          ANGULAR_LINES=$(jq '.Angular.code // 0' output/cloc-output.json)
           PYTHON_LINES=$(jq '.Python.code // 0' output/cloc-output.json)
 
-          # Calculate Others
           OTHERS=$(jq '[to_entries | map(select(.key != "SUM"
               and .key != "Java"
               and .key != "JavaScript"
-              and .key != "TypeScript"
-              and .key != "Angular"
               and .key != "Python"
               and (.value.code // 0) > 0)) | .[].value.code] | add // 0' output/cloc-output.json)
 
-          # Format numbers with commas
           format_number() {
             export LC_ALL="en_US.UTF-8"
             printf "%'d\n" $1
@@ -82,27 +97,21 @@ jobs:
 
           F_JAVA=$(format_number $JAVA_LINES)
           F_JS=$(format_number $JS_LINES)
-          F_TS=$(format_number $TS_LINES)
-          F_ANGULAR=$(format_number $ANGULAR_LINES)
           F_PYTHON=$(format_number $PYTHON_LINES)
           F_OTHERS=$(format_number $OTHERS)
           F_TOTAL=$(format_number $(jq '.SUM.code // 0' output/cloc-output.json))
 
-          # Build README block
           CODE_BLOCK="\`\`\`
           [ LANGUAGES BREAKDOWN ]
 
           Java         --> $F_JAVA lines
           JavaScript   --> $F_JS lines
-          TypeScript   --> $F_TS lines
-          Angular      --> $F_ANGULAR lines
           Python       --> $F_PYTHON lines
           Others       --> $F_OTHERS lines
 
           [ TOTAL LINES OF CODE: $F_TOTAL ]
           \`\`\`"
 
-          # Update README.md
           echo "$CODE_BLOCK" > temp_block.txt
           sed -i '/<!-- LANGUAGES BREAKDOWN START -->/,/<!-- LANGUAGES BREAKDOWN END -->/{
               //!d
