@@ -6,12 +6,9 @@
 
 JavaScript   --> 2,683 lines
 TypeScript   --> 0 lines
-JSX          --> 0 lines
-Vue.js       --> 0 lines
-PHP          --> 0 lines
-C#           --> 0 lines
-Other        --> 15,370 lines
+Java         --> 3,512 lines
+Other        --> 11,849 lines
 
-[ TOTAL LINES OF CODE: 18,053 ]
+[ TOTAL LINES OF CODE: 18,044 ]
 ```
  <!-- LANGUAGES BREAKDOWN END -->
