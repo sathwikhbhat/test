@@ -62,7 +62,7 @@ jobs:
           FORMATTED_TOTAL=$(format_number $TOTAL_LINES)
 
           # Build dynamic breakdown: exclude SUM and sort by line count
-          LANGS=$(jq -r 'to_entries | map(select(.key != "SUM")) | sort_by(-.value.code)[] | "\(.key) --> \( .value.code )"' output/cloc-output.json)
+          LANGS=$(jq -r 'to_entries | map(select(.key != "SUM" and (.value.code // 0) > 0)) | sort_by(-(.value.code // 0))[] | "\(.key) --> \(.value.code // 0)"' output/cloc-output.json)
 
           # Format each line with commas
           CODE_BLOCK="[\n"
