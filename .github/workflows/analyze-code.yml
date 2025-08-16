@@ -22,8 +22,8 @@ jobs:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           USERNAME="sathwikhbhat"
-          REPOS=$(curl -H "Authorization: token $GH_PAT" -s "https://api.github.com/user/repos?per_page=100" \
-            | jq -r '.[] | select(.fork == false) | .full_name')
+
+          REPOS=$(curl -H "Authorization: token $GH_PAT" -s "https://api.github.com/user/repos?per_page=100" | jq -r '.[] | select(.fork == false) | .full_name') || echo "Error fetching repositories"
 
           mkdir -p public-repos
           cd public-repos
@@ -31,17 +31,16 @@ jobs:
           for REPO in $REPOS; do
             REPO_URL="https://github.com/$REPO.git"
             AUTHENTICATED_REPO=$(echo "$REPO_URL" | sed "s/https:\/\//https:\/\/$GH_PAT@/g")
-            DEFAULT_BRANCH=$(curl -H "Authorization: token $GH_PAT" -s "https://api.github.com/repos/$REPO" \
-              | jq -r '.default_branch')
-            git clone --branch "$DEFAULT_BRANCH" --single-branch "$AUTHENTICATED_REPO" "$(basename $REPO)-$DEFAULT_BRANCH" \
-              || echo "Failed to clone $REPO"
+
+            DEFAULT_BRANCH=$(curl -H "Authorization: token $GH_PAT" -s "https://api.github.com/repos/$REPO" | jq -r '.default_branch')
+
+            echo "Cloning $REPO (default branch: $DEFAULT_BRANCH)..."
+            git clone --branch "$DEFAULT_BRANCH" --single-branch "$AUTHENTICATED_REPO" "$(basename $REPO)-$DEFAULT_BRANCH" || echo "Failed to clone $REPO."
           done
 
           echo "Calculating lines of code..."
           mkdir -p ../output
-          cloc . \
-            --exclude-lang=HTML,CSS,JSON,Markdown,XML,SVG,SCSS,YAML,TOML,CSV \
-            --json > ../output/cloc-output.json
+          cloc . --exclude-ext=json,html,css,svg,md,py,ps1,scss,csv --json > ../output/cloc-output.json
 
       - name: Commit and Push Output
         env:
@@ -50,36 +49,34 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+          TOTAL_LINES=$(jq '.SUM.code // 0' output/cloc-output.json)
           JAVA_LINES=$(jq '.Java.code // 0' output/cloc-output.json)
           JS_LINES=$(jq '.JavaScript.code // 0' output/cloc-output.json)
-          PYTHON_LINES=$(jq '.Python.code // 0' output/cloc-output.json)
+          PY_LINES=$(jq '.Python.code // 0' output/cloc-output.json)
 
-          OTHERS=$(jq '[to_entries | map(select(.key != "SUM"
-              and .key != "Java"
-              and .key != "JavaScript"
-              and .key != "Python"
-              and (.value.code // 0) > 0)) | .[].value.code] | add // 0' output/cloc-output.json)
+          # Others = Total - (Java + JavaScript + Python)
+          OTHER_LINES=$((TOTAL_LINES - JAVA_LINES - JS_LINES - PY_LINES))
 
           format_number() {
             export LC_ALL="en_US.UTF-8"
             printf "%'d\n" $1
           }
 
-          F_JAVA=$(format_number $JAVA_LINES)
-          F_JS=$(format_number $JS_LINES)
-          F_PYTHON=$(format_number $PYTHON_LINES)
-          F_OTHERS=$(format_number $OTHERS)
-          F_TOTAL=$(format_number $(jq '.SUM.code // 0' output/cloc-output.json))
+          FORMATTED_TOTAL=$(format_number $TOTAL_LINES)
+          FORMATTED_JAVA=$(format_number $JAVA_LINES)
+          FORMATTED_JS=$(format_number $JS_LINES)
+          FORMATTED_PY=$(format_number $PY_LINES)
+          FORMATTED_OTHER=$(format_number $OTHER_LINES)
 
           CODE_BLOCK="\`\`\`
           [ LANGUAGES BREAKDOWN ]
 
-          Java         -->  $F_JAVA lines
-          JavaScript   -->  $F_JS lines
-          Python       -->  $F_PYTHON lines
-          Others       -->  $F_OTHERS lines
+          Java        --> $FORMATTED_JAVA lines
+          JavaScript  --> $FORMATTED_JS lines
+          Python      --> $FORMATTED_PY lines
+          Other       --> $FORMATTED_OTHER lines
 
-          [ TOTAL LINES OF CODE: $F_TOTAL ]
+          [ TOTAL LINES OF CODE: $FORMATTED_TOTAL ]
           \`\`\`"
 
           echo "$CODE_BLOCK" > temp_block.txt
@@ -87,8 +84,9 @@ jobs:
               //!d
               /<!-- LANGUAGES BREAKDOWN START -->/r temp_block.txt
           }' README.md
+
           rm temp_block.txt
 
           git add output/cloc-output.json README.md
-          git commit -m "Updated README and `cloc-output.json` with latest code stats" || echo "No changes to commit"
+          git commit -m "Updated README.md and cloc-output.json with latest code stats" || echo "No changes to commit" 
           git push origin HEAD
