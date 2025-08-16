@@ -1,43 +1,13 @@
 name: Update Lines of Code in Readme
 
 on:
-  schedule:
-    - cron: "55 23 * * *"
-  workflow_dispatch:
+  workflow_dispatch:   # Only runs when triggered manually
 
 jobs:
   count-lines:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check if there were commits today
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          USERNAME="sathwikhbhat"
-          SINCE=$(date -u -d "yesterday 00:00:00" +"%Y-%m-%dT%H:%M:%SZ")
-          UNTIL=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
-          REPOS=$(curl -s -H "Authorization: token $GH_PAT" \
-            "https://api.github.com/users/$USERNAME/repos?per_page=100" \
-            | jq -r '.[].full_name')
-
-          COMMITS_FOUND=false
-          for REPO in $REPOS; do
-            COMMITS=$(curl -s -H "Authorization: token $GH_PAT" \
-              "https://api.github.com/repos/$REPO/commits?since=$SINCE&until=$UNTIL" \
-              | jq length)
-            if [ "$COMMITS" -gt 0 ]; then
-              COMMITS_FOUND=true
-              break
-            fi
-          done
-
-          if [ "$COMMITS_FOUND" = false ]; then
-            echo "No commits today. Exiting."
-            exit 0
-          fi
-
       - name: Checkout Code
         uses: actions/checkout@v3
 
