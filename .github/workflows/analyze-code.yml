@@ -1,7 +1,7 @@
 name: Update Lines of Code in Readme
 
 on:
-  workflow_dispatch:   # Only runs when triggered manually
+  workflow_dispatch:
 
 jobs:
   count-lines:
@@ -74,10 +74,10 @@ jobs:
           CODE_BLOCK="\`\`\`
           [ LANGUAGES BREAKDOWN ]
 
-          Java         --> $F_JAVA lines
-          JavaScript   --> $F_JS lines
-          Python       --> $F_PYTHON lines
-          Others       --> $F_OTHERS lines
+          Java         -->  $F_JAVA lines
+          JavaScript   -->  $F_JS lines
+          Python       -->  $F_PYTHON lines
+          Others       -->  $F_OTHERS lines
 
           [ TOTAL LINES OF CODE: $F_TOTAL ]
           \`\`\`"
