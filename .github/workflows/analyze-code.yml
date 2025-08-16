@@ -50,32 +50,35 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           TOTAL_LINES=$(jq '.SUM.code // 0' output/cloc-output.json)
-          JAVA_LINES=$(jq '.Java.code // 0' output/cloc-output.json)
-          JS_LINES=$(jq '.JavaScript.code // 0' output/cloc-output.json)
-          PY_LINES=$(jq '.Python.code // 0' output/cloc-output.json)
-
-          # Others = Total - (Java + JavaScript + Python)
-          OTHER_LINES=$((TOTAL_LINES - JAVA_LINES - JS_LINES - PY_LINES))
 
           format_number() {
             export LC_ALL="en_US.UTF-8"
             printf "%'d\n" $1
           }
 
+          # Build sorted breakdown: lang -> code lines, filter >1, sort desc
+          LANG_BREAKDOWN=$(jq -r 'to_entries 
+            | map(select(.key != "header" and .key != "SUM")) 
+            | map({lang: .key, lines: .value.code}) 
+            | map(select(.lines > 1)) 
+            | sort_by(-.lines)[] 
+            | "\(.lang)  -->  \(.lines)"' output/cloc-output.json)
+
+          # Format numbers with commas
+          FORMATTED_BREAKDOWN=""
+          while IFS= read -r line; do
+            LANG=$(echo "$line" | awk '{print $1}')
+            LINES=$(echo "$line" | awk '{print $3}')
+            FORMATTED=$(format_number $LINES)
+            FORMATTED_BREAKDOWN+="$LANG  -->  $FORMATTED lines"$'\n'
+          done <<< "$LANG_BREAKDOWN"
+
           FORMATTED_TOTAL=$(format_number $TOTAL_LINES)
-          FORMATTED_JAVA=$(format_number $JAVA_LINES)
-          FORMATTED_JS=$(format_number $JS_LINES)
-          FORMATTED_PY=$(format_number $PY_LINES)
-          FORMATTED_OTHER=$(format_number $OTHER_LINES)
 
           CODE_BLOCK="\`\`\`
           [ LANGUAGES BREAKDOWN ]
 
-          Java        -->   $FORMATTED_JAVA lines
-          JavaScript  -->   $FORMATTED_JS lines
-          Python      -->   $FORMATTED_PY lines
-          Other       -->   $FORMATTED_OTHER lines
-
+          $FORMATTED_BREAKDOWN
           [ TOTAL LINES OF CODE: $FORMATTED_TOTAL ]
           \`\`\`"
 
@@ -88,5 +91,5 @@ jobs:
           rm temp_block.txt
 
           git add output/cloc-output.json README.md
-          git commit -m "Updated README.md and cloc-output.json with latest code stats" || echo "No changes to commit" 
+          git commit -m "Updated README.md and cloc-output.json with detailed language breakdown" || echo "No changes to commit" 
           git push origin HEAD
