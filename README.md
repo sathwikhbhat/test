@@ -4,14 +4,7 @@
 ```
 [ LANGUAGES BREAKDOWN ]
 
-Java  -->  3,512 lines
-JavaScript  -->  2,683 lines
-Python  -->  2,079 lines
-DOS Batch  -->  486 lines
-Bourne Shell  -->  390 lines
-C  -->  51 lines
-GLSL  -->  16 lines
-
+Java            -->      3,512 linesJavaScript      -->      2,683 linesPython          -->      2,079 linesDOS Batch       -->        486 linesBourne Shell    -->        390 linesC               -->         51 linesGLSL            -->         16 lines
 [ TOTAL LINES OF CODE: 9,217 ]
 ```
  <!-- LANGUAGES BREAKDOWN END -->
