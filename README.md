@@ -13,8 +13,7 @@ Bourne Shell  -->  390 lines
 Gradle  -->  68 lines
 C  -->  51 lines
 GLSL  -->  16 lines
-XML  -->  11 lines
 
-[ TOTAL LINES OF CODE: 9,744 ]
+[ TOTAL LINES OF CODE: 9,733 ]
 ```
  <!-- LANGUAGES BREAKDOWN END -->
