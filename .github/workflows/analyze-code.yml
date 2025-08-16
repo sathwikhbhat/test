@@ -40,7 +40,7 @@ jobs:
 
           echo "Calculating lines of code..."
           mkdir -p ../output
-          cloc . --exclude-ext=html,htm,css,json,md,markdown,xml,svg,scss,yaml,toml,csv,txt,yml,sass,lock,log,properties,HTML,HTM,CSS,JSON,MD,MARKDOWN,XML,SVG,SCSS,YAML,TOML,CSV,TXT,YML,SASS,LOCK,LOG,PROPERTIES --exclude-lang=XML,Properties --json > ../output/cloc-output.json
+          cloc . --exclude-ext=html,htm,css,json,md,markdown,xml,svg,scss,yaml,toml,csv,txt,yml,sass,lock,log,properties,HTML,HTM,CSS,JSON,MD,MARKDOWN,XML,SVG,SCSS,YAML,TOML,CSV,TXT,YML,SASS,LOCK,LOG,PROPERTIES --exclude-lang=XML,Properties,Maven,Gradle --json > ../output/cloc-output.json
       - name: Commit and Push Output
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
