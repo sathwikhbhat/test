@@ -11,11 +11,10 @@ DOS Batch  -->  486 lines
 Maven  -->  448 lines
 Bourne Shell  -->  390 lines
 Gradle  -->  68 lines
-Properties  -->  68 lines
 C  -->  51 lines
 GLSL  -->  16 lines
 XML  -->  11 lines
 
-[ TOTAL LINES OF CODE: 9,812 ]
+[ TOTAL LINES OF CODE: 9,744 ]
 ```
  <!-- LANGUAGES BREAKDOWN END -->
