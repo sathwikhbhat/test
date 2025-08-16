@@ -40,7 +40,7 @@ jobs:
 
           echo "Calculating lines of code..."
           mkdir -p ../output
-          cloc . --exclude-ext=HTML,CSS,JSON,Markdown,XML,SVG,SCSS,YAML,TOML,CSV --json > ../output/cloc-output.json
+          cloc . --exclude-ext=html,htm,css,json,md,markdown,xml,svg,scss,yaml,toml,csv --json > ../output/cloc-output.json
 
       - name: Commit and Push Output
         env:
