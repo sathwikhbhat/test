@@ -10,14 +10,12 @@ Python  -->  2,079 lines
 DOS Batch  -->  486 lines
 Maven  -->  448 lines
 Bourne Shell  -->  390 lines
-YAML  -->  119 lines
 Gradle  -->  68 lines
 Properties  -->  68 lines
-Text  -->  68 lines
 C  -->  51 lines
 GLSL  -->  16 lines
 XML  -->  11 lines
 
-[ TOTAL LINES OF CODE: 9,999 ]
+[ TOTAL LINES OF CODE: 9,812 ]
 ```
  <!-- LANGUAGES BREAKDOWN END -->
