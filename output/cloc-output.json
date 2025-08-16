@@ -1,11 +1,21 @@
 {"header" : {
   "cloc_url"           : "github.com/AlDanial/cloc",
   "cloc_version"       : "1.98",
-  "elapsed_seconds"    : 0.129632949829102,
-  "n_files"            : 186,
-  "n_lines"            : 13295,
-  "files_per_second"   : 1434.82039284926,
-  "lines_per_second"   : 102558.801736188},
+  "elapsed_seconds"    : 0.18285083770752,
+  "n_files"            : 295,
+  "n_lines"            : 35134,
+  "files_per_second"   : 1613.33687993199,
+  "lines_per_second"   : 192145.687930612},
+"CSV" :{
+  "nFiles": 1,
+  "blank": 0,
+  "comment": 0,
+  "code": 10001},
+"CSS" :{
+  "nFiles": 10,
+  "blank": 551,
+  "comment": 137,
+  "code": 5169},
 "Java" :{
   "nFiles": 107,
   "blank": 783,
@@ -21,6 +31,26 @@
   "blank": 364,
   "comment": 328,
   "code": 2079},
+"HTML" :{
+  "nFiles": 27,
+  "blank": 198,
+  "comment": 87,
+  "code": 1961},
+"JSON" :{
+  "nFiles": 6,
+  "blank": 0,
+  "comment": 0,
+  "code": 1546},
+"Markdown" :{
+  "nFiles": 20,
+  "blank": 370,
+  "comment": 2,
+  "code": 1077},
+"SVG" :{
+  "nFiles": 45,
+  "blank": 1,
+  "comment": 3,
+  "code": 736},
 "DOS Batch" :{
   "nFiles": 4,
   "blank": 116,
@@ -72,7 +102,7 @@
   "comment": 0,
   "code": 16},
 "SUM": {
-  "blank": 1978,
-  "comment": 1197,
-  "code": 10120,
-  "nFiles": 186} }
+  "blank": 3098,
+  "comment": 1426,
+  "code": 30610,
+  "nFiles": 295} }
