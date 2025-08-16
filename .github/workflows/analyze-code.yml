@@ -56,19 +56,16 @@ jobs:
             printf "%'d\n" $1
           }
 
-          # Build sorted breakdown: lang -> code lines, filter >1, sort desc
-          LANG_BREAKDOWN=$(jq -r 'to_entries 
-            | map(select(.key != "header" and .key != "SUM")) 
-            | map({lang: .key, lines: .value.code}) 
-            | map(select(.lines > 1)) 
-            | sort_by(-.lines)[] 
-            | "\(.lang)  -->  \(.lines)"' output/cloc-output.json)
+          # Build sorted breakdown as CSV: lang,lines
+          LANG_BREAKDOWN=$(jq -r 'to_entries
+            | map(select(.key != "header" and .key != "SUM"))
+            | map({lang: .key, lines: .value.code})
+            | map(select(.lines > 1))
+            | sort_by(-.lines)[]
+            | "\(.lang),\(.lines)"' output/cloc-output.json)
 
-          # Format numbers with commas
           FORMATTED_BREAKDOWN=""
-          while IFS= read -r line; do
-            LANG=$(echo "$line" | awk '{print $1}')
-            LINES=$(echo "$line" | awk '{print $3}')
+          while IFS=, read -r LANG LINES; do
             FORMATTED=$(format_number $LINES)
             FORMATTED_BREAKDOWN+="$LANG  -->  $FORMATTED lines"$'\n'
           done <<< "$LANG_BREAKDOWN"
@@ -91,5 +88,5 @@ jobs:
           rm temp_block.txt
 
           git add output/cloc-output.json README.md
-          git commit -m "Updated README.md and cloc-output.json with detailed language breakdown" || echo "No changes to commit" 
+          git commit -m "Updated README.md and cloc-output.json with detailed language breakdown" || echo "No changes to commit"
           git push origin HEAD
